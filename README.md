@@ -11,3 +11,17 @@ This repository contains example configurations for establishing VPC peering bet
 
 ## Usage Note
 **Important:** This is a sample configuration intended as a reference. Please thoroughly review and adjust the configuration to align with your specific requirements.
+In order to run this configuration - support a tfvars file in the following fashion:
+
+##input.tfvars:
+name                  = "Rivery_PL_vpc"
+pl_vpc_cidr_block     = "172.26.30.0/24"
+region                = "eu-west-1"
+accepter_vpc_id       = "vpc-abcdabcd1234234"
+accepter_region       = "us-east-2"
+accepter_cidr         = "10.45.0.0/16"
+accepter_route_tables = ["rtb-AFAFAFAFAF123123123", "rtb-FEFEFEFE1231231231", "rtb-BCBCBCBC123123123"]
+
+# init = true
+
+**To run use:** terraform <action> --var-file=input.tfvars
