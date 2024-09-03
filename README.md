@@ -21,7 +21,6 @@ accepter_vpc_id       = "vpc-abcdabcd1234234"
 accepter_region       = "us-east-2"
 accepter_cidr         = "10.45.0.0/16"
 accepter_route_tables = ["rtb-AFAFAFAFAF123123123", "rtb-FEFEFEFE1231231231", "rtb-BCBCBCBC123123123"]
-
-# init = true
+init = true
 
 **To run use:** terraform <action> --var-file=input.tfvars
