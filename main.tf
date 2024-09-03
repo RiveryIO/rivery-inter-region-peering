@@ -1,5 +1,4 @@
 provider "aws" {
-  alias   = "requester"
   region  = var.region
   profile = "management"
 }
@@ -11,14 +10,10 @@ provider "aws" {
 }
 
 data "aws_availability_zones" "available" {
-  provider = aws.requester
-  state    = "available"
+  state = "available"
 }
 
 module "pl_vpc" {
-  providers = {
-    aws.requester = aws.requester
-  }
   source          = "terraform-aws-modules/vpc/aws"
   name            = var.name
   cidr            = var.pl_vpc_cidr_block
@@ -38,12 +33,8 @@ module "pl_vpc" {
 
 }
 
-# Must target out this module until VPC has already been created
 module "peering_requester" {
-  count = var.init ? 0 : 1
-  providers = {
-    aws.requester = aws.requester
-  }
+  count  = var.init ? 0 : 1
   source = "./modules/pl_vpc_peering_requester"
 
   requester_vpc_id       = module.pl_vpc.vpc_id
@@ -58,9 +49,11 @@ module "peering_requester" {
 
 module "peering_accepter" {
   count = var.init ? 0 : 1
+
   providers = {
-    aws.accepter = aws.accepter
+    "aws" = "aws.accepter"
   }
+
   source = "./modules/pl_vpc_peering_accepter"
 
   requester_peering_connection_id = module.peering_requester[0].vpc_peering_connection_id
