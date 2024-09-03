@@ -11,7 +11,8 @@ provider "aws" {
 }
 
 data "aws_availability_zones" "available" {
-  state = "available"
+  provider = aws.requester
+  state    = "available"
 }
 
 module "pl_vpc" {
@@ -53,4 +54,19 @@ module "peering_requester" {
   name                   = var.name
 
   depends_on = [module.pl_vpc]
+}
+
+module "peering_accepter" {
+  count = var.init ? 0 : 1
+  providers = {
+    aws.accepter = aws.accepter
+  }
+  source = "./modules/pl_vpc_peering_accepter"
+
+  requester_peering_connection_id = module.peering_requester[0].vpc_peering_connection_id
+  requester_cidr                  = module.pl_vpc.vpc_cidr_block
+  accepter_route_tables           = var.accepter_route_tables
+  name                            = var.name
+
+  depends_on = [module.peering_requester]
 }

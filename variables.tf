@@ -31,4 +31,7 @@ variable "accepter_cidr" {
   type = string
 }
 
-
+variable "accepter_route_tables" {
+  description = "List of route table ID's for private subnets in the accepter VPC"
+  type        = list(string)
+}
